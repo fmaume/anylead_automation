@@ -42,7 +42,7 @@ def enrich_domain(list_name, website_list):
 def enrich_domain_sequence(list_name_patern, website_long_list):
     x = 0
     print("0")
-    while(x < len(website_long_list)):
+    while(x < len(website_long_list)+100):
         list_name = list_name_patern + str(x)
         
         # hash website_long_list in sublist of 100 entry
