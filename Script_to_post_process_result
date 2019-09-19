@@ -1,0 +1,218 @@
+#%% 
+##merge result
+#download all file as excel and put then in on folder
+#edit line 9 with the access path to your folder
+
+import glob
+import pandas as pd
+#set file path with to a forlder with all the file to merge
+file_path = "C:\\Users\\fab\\anyleads_result
+patern = file_path + "\\*"
+
+#create a list of all file to merge
+file_list = glob.glob(patern)
+
+#import first file to initiate the dataframe
+Result = pd.read_excel(file_list[0])
+
+#appednd all the files to the first one
+for file in file_list[1:len(file_list)]:
+    stemp = pd.read_excel(file)
+    Result = Result.append(stemp)
+    
+##############################################
+#%%
+## check for specific keywords in the job title
+#function to search for keyword
+def search_keyword(keyword, content_list):
+    result = list()
+    for lines in content_list:
+        try:
+            lines = lines.lower()
+            lines.index(keyword.lower())
+            stemp = True
+        except:
+            stemp = False
+        result.append(stemp)
+    return result 
+
+#create a list with all job titles
+job = Result["person_job_title"]
+
+# create list of True & False for all job titles
+product = search_keyword("product" , job)
+data = search_keyword("data" , job)
+
+#Create new column in dataframe with result
+Result["0_product"] =product
+Result["0_data"] =data
+
+##############################################
+#%%
+#filter relevent contact based on job title
+#create a new variable relevant_job which is True if at least on of the terget keyword appered in the job title
+relevant_job = Result["0_product"] + Result["0_data"]
+Result["relevant_job"] = relevant_job
+
+#Optional : filter the file to keep only relevent contacts
+Result = Result[Result["relevant_job"] == True ]
+
+##############################################
+#%%
+#Get country out of people location. Not 100% accurate
+def get_country(location_list):
+    result = list()
+    for elments in location_list:
+        if "Royaume-Uni".lower() in elments.lower():
+            stemp = "United Kingdom"
+        elif "United Kingdom".lower() in elments.lower():
+            stemp = "United Kingdom"
+        elif "Turkey".lower() in elments.lower():
+            stemp = "Turkey"
+        elif "Tunisia".lower() in elments.lower():
+            stemp = "Tunisia"            
+        elif "Switzerland".lower() in elments.lower():
+            stemp = "Switzerland"    
+        elif "Sweden".lower() in elments.lower():
+            stemp = "Sweden"
+        elif "Svizzera".lower() in elments.lower():
+            stemp = "Switzerland"
+        elif "Suisse".lower() in elments.lower():
+            stemp = "Switzerland"            
+        elif "Suède".lower() in elments.lower():
+            stemp = "Sweden"
+        elif "Spain".lower() in elments.lower():
+            stemp = "Spain"
+        elif "South Africa".lower() in elments.lower():
+            stemp = "South Africa"
+        elif "Slovak Republic".lower() in elments.lower():
+            stemp = "Slovak Republic"
+        elif "Singapore".lower() in elments.lower():
+            stemp = "Singapore"
+        elif "Russian Federation".lower() in elments.lower():
+            stemp = "Russian Federation"
+        elif "Romania".lower() in elments.lower():
+            stemp = "Romania"
+        elif "République tchèque".lower() in elments.lower():
+            stemp = "Czech Republic"
+        elif "Czech Republic".lower() in elments.lower():
+            stemp = "Czech Republic"
+        elif "Portugal".lower() in elments.lower():
+            stemp = "Portugal"
+        elif "Poland".lower() in elments.lower():
+            stemp = "Poland"
+        elif "Pakistan".lower() in elments.lower():
+            stemp = "Pakistan"
+        elif "Norwegen".lower() in elments.lower():
+            stemp = "Norway"
+        elif "Norway".lower() in elments.lower():
+            stemp = "Norway"
+        elif "Netherlands".lower() in elments.lower():
+            stemp = "Netherlands"            
+        elif "Morocco".lower() in elments.lower():
+            stemp = "Morocco"            
+        elif "Mexico".lower() in elments.lower():
+            stemp = "Mexico"            
+        elif "Lithuania".lower() in elments.lower():
+            stemp = "Lithuania"            
+        elif "Korea".lower() in elments.lower():
+            stemp = "Korea"            
+        elif "Italy".lower() in elments.lower():
+            stemp = "Italy"    
+            
+        elif "Italie".lower() in elments.lower():
+            stemp = "Italy" 
+        elif "Israel".lower() in elments.lower():
+            stemp = "Israel"             
+        elif "Ireland".lower() in elments.lower():
+            stemp = "Ireland"             
+        elif "India".lower() in elments.lower():
+            stemp = "India"             
+        elif "Inde".lower() in elments.lower():
+            stemp = "Inde"             
+        elif "Italy".lower() in elments.lower():
+            stemp = "Italy"             
+        elif "Großbritannien".lower() in elments.lower():
+            stemp = "United Kingdom"             
+        elif "Germany".lower() in elments.lower():
+            stemp = "Germany"             
+        elif "Germania".lower() in elments.lower():
+            stemp = "Germania"            
+        elif "France".lower() in elments.lower():
+            stemp = "France"             
+        elif "États-Unis".lower() in elments.lower():
+            stemp = "US"             
+        elif "Espagne".lower() in elments.lower():
+            stemp = "Spain"             
+        elif "Deutschland".lower() in elments.lower():
+            stemp = "Germany"       
+            
+            
+            
+        elif "Dänemark".lower() in elments.lower():
+            stemp = "Denmark"                  
+        elif "China".lower() in elments.lower():
+            stemp = "China"                  
+        elif "Canada".lower() in elments.lower():
+            stemp = "Canada"                  
+        elif "Brasil".lower() in elments.lower():
+            stemp = "Brasil"                  
+        elif "België".lower() in elments.lower():
+            stemp = "Belgien"                  
+        elif "Autriche".lower() in elments.lower():
+            stemp = "Austria"                  
+        elif "Austrália".lower() in elments.lower():
+            stemp = "Australia"                  
+        elif "Australia".lower() in elments.lower():
+            stemp = "Australia"                 
+        elif "España".lower() in elments.lower():
+            stemp = "Spain"                  
+        elif "Allemagne".lower() in elments.lower():
+            stemp = "Germany"           
+            
+        #try to get us based on area keyword
+        elif "Area".lower() in elments.lower():
+            stemp = "US_area" 
+        else:
+            stemp ="unknown"
+        result.append(stemp)
+        
+    return result
+            
+city = Result["person_city"]    
+country =   get_country(city)          
+Result["0_persone_country"] = country     
+
+##############################################
+#%%
+# post process email to remove miss match
+email = Result["person_business_email"]
+extension = list()
+for elment in email:
+    try:
+        start = elment.index('@')
+        stemp = elment[start+1:len(elment)]
+    except: 
+        stemp = "unknown"
+    extension.append(stemp)
+   
+Result["person_business_email_extension"]     = extension
+
+#check if email extension match the query
+email_match = Result["query"] == Result["person_business_email_extension"] 
+Result["email_match"]    = email_match
+
+#restrict sample accordingly
+Result = Result[Result["email_match"] == True]
+##############################################
+#%%
+#export result 
+
+out_path = "C:\\Users\\Fab\\anyleads_result\\Anylead_agregate.xlsx"
+writer = pd.ExcelWriter(out_path, engine='xlsxwriter')            
+Result.to_excel(writer,   header=True, index=False ) 
+writer.close()
+
+
+
+
