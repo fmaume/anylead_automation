@@ -5,5 +5,5 @@ It enable to get a list of employee based one company domain name. However this 
 
 # The script require:
   * Python 3 with selenium & pandas packages.
-  * Chrome webbrother.
+  * Chrome webbrowther.
   * Proper set up of selenium on your computer (notably the path chrome driver set up in environment variables).
